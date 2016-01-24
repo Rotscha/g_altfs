@@ -109,11 +109,11 @@ struct usb_endpoint_descriptor ep_desc_intr =
 
 
 struct usb_request * requestEP0   = NULL;
-//struct usb_request * requestEPIN  = NULL;
-//struct usb_request * requestEPOUT = NULL;
+struct usb_request * requestEPIN  = NULL;
+struct usb_request * requestEPOUT = NULL;
 struct usb_ep      * ep0          = NULL;
-//struct usb_ep      * epIn         = NULL;
-//struct usb_ep      * epOut        = NULL;
+struct usb_ep      * epIn         = NULL;
+struct usb_ep      * epOut        = NULL;
 struct usb_gadget  * ggadget      = NULL;
 
 struct Endpoint
@@ -169,7 +169,7 @@ void epIn_request_complete(struct usb_ep *ep,struct usb_request *req)
 
 void epOut_request_complete(struct usb_ep *uep,struct usb_request *req)
 {
-/*    char ep = 0x01;
+    char ep = 0x01;
     size_t s;
 
     if (req->status != 0)
@@ -194,7 +194,7 @@ void epOut_request_complete(struct usb_ep *uep,struct usb_request *req)
     spin_unlock(&lock);
     printk(KERN_INFO "OUT!\n");
 
-    usb_ep_queue(uep, req, GFP_ATOMIC);*/
+    usb_ep_queue(uep, req, GFP_ATOMIC);
 }
 
 
@@ -285,7 +285,7 @@ int g_altfs_gadget_bind(struct usb_gadget * gadget)
 
     // ****************************************************
 
-/*    epIn = usb_ep_autoconfig(gadget, &ep_desc_in);
+    epIn = usb_ep_autoconfig(gadget, &ep_desc_in);
 
     if (!epIn)
     {
@@ -350,7 +350,7 @@ int g_altfs_gadget_bind(struct usb_gadget * gadget)
     requestEPOUT->length = 512;
     requestEPOUT->status = 0;
 
-    //usb_ep_autoconfig_reset(gadget);*/
+    //usb_ep_autoconfig_reset(gadget);
 
     //INIT_LIST_HEAD(&descriptor.configs.list);
 
@@ -363,13 +363,13 @@ void g_altfs_gadget_unbind(struct usb_gadget * gadget)
 {
     printk(KERN_INFO "unbind\n");
     
-//    kfree(requestEPIN->buf);
-//    kfree(requestEPOUT->buf);
+    kfree(requestEPIN->buf);
+    kfree(requestEPOUT->buf);
     kfree(requestEP0->context);
     kfree(requestEP0->buf);
 
-//    usb_ep_free_request(epOut, requestEPOUT);
-//    usb_ep_free_request(epIn, requestEPIN);
+    usb_ep_free_request(epOut, requestEPOUT);
+    usb_ep_free_request(epIn, requestEPIN);
     usb_ep_free_request(gadget->ep0, requestEP0);
 
 
